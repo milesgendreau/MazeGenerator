@@ -4,7 +4,7 @@ def addPos(a, b):
     return (a[0]+b[0], a[1]+b[1])
 
 class Cell():
-    def __init__(self, x, y, w=20, h=12):
+    def __init__(self, x, y, w=40, h=30):
         self.pos = (x, y)
         self.mazeSize = (w, h)
         self.walls = [1, 1, 1, 1]
@@ -32,18 +32,19 @@ class Cell():
             else:
                 return 0, 0         
 
-cells = []
-for i in range(12):
-    cells.append([])
-    for j in range(20):
-        cells[i].append(Cell(j, i))
+def depthFirst(w=40, h=30):
+    cells = []
+    for i in range(h):
+        cells.append([])
+        for j in range(w):
+            cells[i].append(Cell(j, i, w, h))
 
 
-prevVis = []
-initial = cells[0][0]
-initial.visited = True
-prevVis.append(initial)
-def depthFirst():
+    prevVis = []
+    initial = cells[0][0]
+    initial.visited = True
+    prevVis.append(initial)
+
     while len(prevVis) > 0:
         current = prevVis.pop()
         neighbor, visit = current.findNeighbor(cells, [(-1, 0), (0, -1), (1, 0), (0, 1)])
@@ -65,9 +66,18 @@ def depthFirst():
 
             neighbor.visited = True
             prevVis.append(neighbor)
+
+    return cells
             
 
-depthFirst()
+def getSize():
+    try:
+        return (int(input("width?: ")), int(input("height?: ")))
+    except:
+        return getSize()
+
+size = getSize()
+cells = depthFirst(size[0], size[1])
 
 
 

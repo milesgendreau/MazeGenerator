@@ -1,42 +1,76 @@
+import random
+
+def addPos(a, b):
+    return (a[0]+b[0], a[1]+b[1])
+
 class Cell():
-    def __init__(x, y, w=100, h=100):
+    def __init__(self, x, y, w=20, h=12):
         self.pos = (x, y)
+        self.mazeSize = (w, h)
+        self.walls = [1, 1, 1, 1]
         self.visited = False
-        if x > 0 and x < w:
-            if y > 0 and y < h:
-                self.neighbors = 4
+
+    def findNeighbor(self, cells, opt):
+        options = opt
+        visit = random.choice(options)
+        sumVisit = addPos(self.pos, visit)
+        if min(sumVisit) >= 0 and sumVisit[0] < self.mazeSize[0] and sumVisit[1] < self.mazeSize[1]:
+            neighbor = cells[sumVisit[1]][sumVisit[0]]
+            if neighbor.visited == False:
+                return neighbor, visit
             else:
-                self.neighbors = 3
-        elif y > 0 and y < h:
-            self.neighbors = 3
+                options.remove(visit)
+                if len(options) > 0:
+                    return self.findNeighbor(cells, options)
+                else:
+                    return 0, 0
+    
         else:
-            self.neighbors = 2
+            options.remove(visit)
+            if len(options) > 0:
+                return self.findNeighbor(cells, options)
+            else:
+                return 0, 0         
 
 cells = []
-for i in range(100):
-    for j in range(100):
-        cells.append(Cell(j, i))
+for i in range(12):
+    cells.append([])
+    for j in range(20):
+        cells[i].append(Cell(j, i))
 
-def adjCell(num):
-    if num == 0:
-        return (-1, 0)
-    elif num == 1:
-        return (0, -1)
-    elif num == 2:
-        return (1, 0)
-    elif num == 3:
-        return (0, 1)
-    else:
-        return
 
-def sumPos(pos1, pos2):
-    return (pos1[0] + pos2[0], pos1[1] + pos2[1])
+prevVis = []
+initial = cells[0][0]
+initial.visited = True
+prevVis.append(initial)
+def depthFirst():
+    while len(prevVis) > 0:
+        current = prevVis.pop()
+        neighbor, visit = current.findNeighbor(cells, [(-1, 0), (0, -1), (1, 0), (0, 1)])
+        if neighbor != 0:
+            prevVis.append(current)
+            
+            if visit == (1, 0):
+                current.walls[2] = 0
+                neighbor.walls[0] = 0
+            elif visit == (-1, 0):
+                current.walls[0] = 0
+                neighbor.walls[2] = 0
+            elif visit == (0, 1):
+                current.walls[3] = 0
+                neighbor.walls[1] = 0
+            elif visit == (0, -1):
+                current.walls[1] = 0
+                neighbor.walls[3] = 0
 
-current_cell = (random.randint(0, 100), random.randint(0, 100))
+            neighbor.visited = True
+            prevVis.append(neighbor)
+            
 
-def search():
-    visit = adjCell(random.randint(0, 4))
-        
+depthFirst()
+
+
+
+
 
     
-

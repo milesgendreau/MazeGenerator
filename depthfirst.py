@@ -66,7 +66,8 @@ def depthFirst(w=40, h=30):
     cells = initializeCells(w, h)
 
     prevVis = [] # stack of previously visited cells, implemented here with a list using .append() and .pop()
-    initial = cells[0][0] # inital choice, keeps the starting position the same every time
+    initial = cells[random.randint(0, h-1)][random.randint(0, w-1)]
+    #initial = cells[-1][-1]
     initial.visited = True
     prevVis.append(initial)
 
@@ -95,11 +96,11 @@ def depthFirst(w=40, h=30):
             neighbor.visited = True
             prevVis.append(neighbor)
 
-    cells[0][0].walls[0] = 0 # entrance
+    cells[0][0].walls[0] = 0 # entance
     cells[-1][-1].walls[2] = 0 # exit
 
     return cells
-            
+
 def drawCells(cells, display, dispScl):
     for row in cells:
         for cell in row:

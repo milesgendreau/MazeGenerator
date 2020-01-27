@@ -3,21 +3,24 @@ import pygame
 
 def addPos(a, b):
     # adds two positions, used for finding a cell's neighbor
-    
+
     return (a[0]+b[0], a[1]+b[1])
 
 class Cell():
     # cells make up the grid and are stored within a 2-d list
     
-    def __init__(self, x, y, w=40, h=30):
+    def __init__(self, x, y, w, h):
         self.pos = (x, y)
         self.mazeSize = (w, h) # used to check boundaries when searching for neighboring cells
         self.walls = [1, 1, 1, 1] # each cell starts with 4 walls, which are removed as the search moves through the grid
         self.visited = False
 
     def draw(self, display, dispScl):
-        # draws a line for each remaining wall. Size and position are scaled based on the number of cells in the grid
         
+        #if self.visited:
+        #    pygame.draw.rect(display, (173, 216, 230), (self.pos[0]*dispScl, self.pos[1]*dispScl, dispScl, dispScl))
+            
+
         if self.walls[0] == 1:
             pygame.draw.line(display, (0,0,0), (self.pos[0]*dispScl, self.pos[1]*dispScl), (self.pos[0]*dispScl, (self.pos[1]+1)*dispScl))
         if self.walls[1] == 1:
@@ -61,13 +64,16 @@ def initializeCells(w, h):
 
     return cells
 
-
-def depthFirst(w=40, h=30):
+def drawCells(cells, display, dispScl):
+    for row in cells:
+        for cell in row:
+            cell.draw(display, dispScl)
+            
+def generate(w, h):
     cells = initializeCells(w, h)
 
     prevVis = [] # stack of previously visited cells, implemented here with a list using .append() and .pop()
     initial = cells[random.randint(0, h-1)][random.randint(0, w-1)]
-    #initial = cells[-1][-1]
     initial.visited = True
     prevVis.append(initial)
 
@@ -101,11 +107,6 @@ def depthFirst(w=40, h=30):
 
     return cells
 
-def drawCells(cells, display, dispScl):
-    for row in cells:
-        for cell in row:
-            cell.draw(display, dispScl)
-
 def getSize():
     try:
         return (int(input("width?: ")), int(input("height?: ")))
@@ -113,7 +114,7 @@ def getSize():
         return getSize()
 
 size = getSize()
-cells = depthFirst(size[0], size[1])
+cells = generate(size[0], size[1])
 
 
 

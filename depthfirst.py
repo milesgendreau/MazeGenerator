@@ -2,7 +2,7 @@ import random
 import pygame
 
 def addPos(a, b):
-    # adds two positions, used for finding a cell's neighbor
+    # adds two positions, used for finding a cells neighbor
     
     return (a[0]+b[0], a[1]+b[1])
 
